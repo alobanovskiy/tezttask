@@ -1,37 +1,12 @@
-# REST Assured + Allure автотесты (Maven)
+# native java http client(supports from 12 java) + Allure автотесты (Maven)
 
-## Что внутри
-- **RestAssured**: HTTP-клиент для API тестов
-- **JUnit 5**: тестовый раннер
-- **Allure**: аннотации + прикрепление request/response
-- **AssertJ**: “красивые” ассерты
-- **Logback/SLF4J**: логгирование в консоль
-
-## Как запустить (Windows)
-1) Установите **JDK** и убедитесь, что команда `java` доступна в терминале (PATH).
-2) При необходимости переопредели через env или `-D...`:
-
-- `BASE_URL` (по умолчанию `https://testslotegrator.com`)
-- `EMAIL` / `PASSWORD` (по умолчанию — `LoginConfig.java`)
-
-2) Запуск тестов:
-
-```bash
-.\mvnw.cmd test
-```
-
-Если `mvnw.cmd` пишет `Java not found`, добавь `C:\Program Files\Java\jdk-21...\bin` в `PATH` (или задай `JAVA_HOME`).
-
-3) Сгенерировать Allure отчёт:
-
-```bash
-.\mvnw.cmd allure:report
-```
-
-Отчёт будет в `target/site/allure-maven-plugin/`.
-
-## Пример теста
-См.:
-- `src/test/java/org/example/test/PlayersSmokeTest.java` (ваш API)
-- `src/test/java/org/example/test/ReqresUserTest.java` (пример на публичном API)
+что сделано 
+описан конфиг, в него вынес креды для авторизации, в будущем это так не делаем, а кидаем в tnv параметры
+алюр у нас для сбора тестовых отчетиков красивых будет использован
+нативный http client - с ним меньше конфликтов зависимостей, функционала для тестирования крудов достаточно, сложности бывают с отправкой бинарников разве только
+maven сборщик, т.к. он мне проще читается, можно и gradle использовать
+jackson - для парсинга в object model и обратно
+log4j как логгер
+junit5 - позволяет в будущем много интересных способов параметризации тестов использовать
+версия языка 21(достаточно актуальна, а что появилось в 26-й я ещё не изучал)
 
