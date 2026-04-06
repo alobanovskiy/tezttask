@@ -3,10 +3,11 @@ package org.example.test.support;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Dtos {
-    private Dtos() {
-    }
 
     public record CredentialsDTO(
             @JsonProperty("email") String email,

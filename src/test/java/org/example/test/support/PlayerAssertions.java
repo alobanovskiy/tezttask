@@ -1,14 +1,15 @@
 package org.example.test.support;
 
 import io.qameta.allure.Step;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.test.support.Dtos.PlayerRequestDTO;
 import static org.example.test.support.Dtos.PlayerResponseDTO;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PlayerAssertions {
-    private PlayerAssertions() {
-    }
 
     @Step("Assert player response matches documentation")
     public static void assertMatchesDocs(PlayerResponseDTO response) {

@@ -2,6 +2,7 @@ package org.example.test.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.qameta.allure.Step;
+import lombok.RequiredArgsConstructor;
 import org.example.test.support.HttpApiClient;
 
 import java.util.List;
@@ -14,12 +15,9 @@ import static org.example.test.support.ApiPaths.PLAYERS_DELETE_ONE_PREFIX;
 import static org.example.test.support.ApiPaths.PLAYERS_GET_ALL;
 import static org.example.test.support.ApiPaths.PLAYERS_GET_ONE;
 
+@RequiredArgsConstructor
 public final class PlayersApi {
     private final HttpApiClient api;
-
-    public PlayersApi(HttpApiClient api) {
-        this.api = api;
-    }
 
     @Step("Create player")
     public PlayerResponseDTO create(String token, PlayerRequestDTO request) {

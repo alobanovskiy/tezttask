@@ -9,13 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
+import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.example.test.support.ApiConstants.EMAIL_DOMAIN;
 import static org.example.test.support.Dtos.PlayerRequestDTO;
@@ -37,8 +36,8 @@ class PlayersApiTaskTest extends BaseApiTest {
 
     private String token;
     private PlayersApi playersApi;
-    private List<PlayerRequestDTO> createdRequests = List.of();
-    private List<PlayerResponseDTO> createdPlayers = List.of();
+    private List<PlayerRequestDTO> createdRequests;
+    private List<PlayerResponseDTO> createdPlayers;
 
     @BeforeEach
     void prepareUsers() {
@@ -47,9 +46,9 @@ class PlayersApiTaskTest extends BaseApiTest {
 
         deleteAllWithTestDomain(playersApi, token);
 
-        createdRequests = IntStream.range(0, CURRENCIES.size())
-                .mapToObj(i -> TestData.newPlayer(CURRENCIES.get(i)))
-                .collect(Collectors.toCollection(ArrayList::new));
+        createdRequests = CURRENCIES.stream()
+                .map(TestData::newPlayer)
+                .toList();
 
         createdPlayers = createdRequests.stream()
                 .map(req -> {
@@ -57,7 +56,7 @@ class PlayersApiTaskTest extends BaseApiTest {
                     assertCreatedMatchesRequest(created, req);
                     return created;
                 })
-                .collect(Collectors.toCollection(ArrayList::new));
+                .toList();
     }
 
     @AfterEach
@@ -65,18 +64,17 @@ class PlayersApiTaskTest extends BaseApiTest {
         if (playersApi == null || token == null) {
             return;
         }
-        for (PlayerResponseDTO created : createdPlayers) {
-            if (created.id() != null && !created.id().isBlank()) {
-                playersApi.deleteOne(token, created.id());
-            }
-        }
 
-        List<PlayerResponseDTO> afterDelete = playersApi.getAll(token);
-        Set<String> remainingEmails = afterDelete.stream()
+        createdPlayers.stream()
+                .filter(cp -> nonNull(cp.id()) && !cp.id().isBlank())
+                .forEach(cp -> playersApi.deleteOne(token, cp.id()));
+
+        var afterDelete = playersApi.getAll(token);
+        var remainingEmails = afterDelete.stream()
                 .map(PlayerResponseDTO::email)
                 .collect(Collectors.toSet());
 
-        for (PlayerRequestDTO req : createdRequests) {
+        for (var req : createdRequests) {
             assertThat(remainingEmails)
                     .as("created email should be deleted: " + req.email())
                     .doesNotContain(req.email());
@@ -87,7 +85,7 @@ class PlayersApiTaskTest extends BaseApiTest {
     }
 
     @Test
-    @Story("ome test for players")
+    @Story("Some test for players")
     @Description("""
             в тест вынесены шаги
             3) Запросить профиль созданного игрока (/api/automationTask/getOne)
@@ -96,8 +94,8 @@ class PlayersApiTaskTest extends BaseApiTest {
             в постусловия вынесены шаги удаления пользователей
             """)
     void automationTaskScenario() {
-        PlayerRequestDTO anyRequest = createdRequests.get(0);
-        PlayerResponseDTO profile = playersApi.getOneByEmail(token, anyRequest.email());
+        var anyRequest = createdRequests.getFirst();
+        var profile = playersApi.getOneByEmail(token, anyRequest.email());
         assertMatchesDocs(profile);
         assertThat(profile.email()).isEqualTo(anyRequest.email());
 
@@ -107,9 +105,9 @@ class PlayersApiTaskTest extends BaseApiTest {
         Set<String> emailsInAll = all.stream()
                 .map(PlayerResponseDTO::email)
                 .collect(Collectors.toSet());
-        for (PlayerRequestDTO req : createdRequests) {
+        for (var req : createdRequests) {
             assertThat(emailsInAll)
-                    .as("getAll contains created email: " + req.email())
+                    .as("getAll contains created email: {}", req.email())
                     .contains(req.email());
         }
 

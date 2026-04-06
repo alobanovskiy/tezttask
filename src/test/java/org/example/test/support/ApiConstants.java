@@ -1,8 +1,10 @@
 package org.example.test.support;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ApiConstants {
-    private ApiConstants() {
-    }
 
     public static final String HOST = "https://testslotegrator.com";
     public static final String API_BASE_PATH = "/api";
