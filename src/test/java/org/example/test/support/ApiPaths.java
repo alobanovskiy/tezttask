@@ -1,8 +1,10 @@
 package org.example.test.support;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ApiPaths {
-    private ApiPaths() {
-    }
 
     public static final String LOGIN = "/tester/login";
 

@@ -1,8 +1,10 @@
 package org.example.test.support;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TestConfig {
-    private TestConfig() {
-    }
 
     public static String baseUrl() {
         return get("BASE_URL", ApiConstants.HOST);

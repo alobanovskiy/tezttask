@@ -1,14 +1,16 @@
 package org.example.test.support;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.example.test.support.Dtos.PlayerRequestDTO;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TestData {
-    private TestData() {
-    }
 
     private static final SecureRandom RND = new SecureRandom();
 
